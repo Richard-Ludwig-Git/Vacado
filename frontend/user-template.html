@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Benutzerbereich</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-info {
+            margin-bottom: 2rem;
+        }
+
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-info-item button {
+            padding: 0.4rem 0.8rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .user-info-item button:hover {
+            background-color: #0056b3;
+        }
+
+        .requests {
+            margin-top: 2rem;
+        }
+
+        .requests ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .requests li {
+            background-color: #e9ecef;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Willkommen, {{ username }}!</h1>
+
+        <div class="user-info">
+            <h2>Deine Daten</h2>
+            <div class="user-info-item">
+                <span>E-Mail: {{ useremail }}</span>
+                <form action="/user/update/email" method="post">
+                    <button type="submit">Ändern</button>
+                </form>
+            </div>
+            <div class="user-info-item">
+                <span>Name: {{ username }}</span>
+                <form action="/user/update/name" method="post">
+                    <button type="submit">Ändern</button>
+                </form>
+            </div>
+            <div class="user-info-item">
+                <span>Passwort: ************</span>
+                <form action="/user/update/name" method="post">
+                    <button type="submit">Ändern</button>
+                </form>
+            </div>
+        </div>
+        <div class="requests">
+            <h2>Gespeicherte Anfragen</h2>
+            {% if userrequests %}
+                <ul>
+                    {% for req in userrequests %}
+                        <li>Duration: {{ req[1] }} ||  Theme: {{ req[2] }} ||  Accommodation: {{ req[3] }} ||  Budget: {{ req[4] }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Keine Anfragen gespeichert.</p>
+            {% endif %}
+        </div>
+        <div class="user-info-item">
+                <form action="/vacation_request_page" method="get">
+                    <button type="submit">Neue Anfrage</button>
+                </form>
+            </div>
+    </div>
+</body>
+</html>
