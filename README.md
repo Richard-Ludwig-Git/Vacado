@@ -39,9 +39,9 @@ vacado/
     ├── login.html              # User login page
     ├── prompt.json             # Sample ChatGPT prompt with placeholder values
   /backend
-      ├── backend_endpoints.py  # CRUD endpoints for all DB-Tables
-      ├── data_handling.py      # PostgreSQL communication
-      ├── security.py           # JWT authentication, User management
+    ├── backend_endpoints.py  # CRUD endpoints for all DB-Tables
+    ├── data_handling.py      # PostgreSQL communication
+    ├── security.py           # JWT authentication, User management
 
 
 
