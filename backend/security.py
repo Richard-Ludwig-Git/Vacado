@@ -19,7 +19,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 load_dotenv("env/.env")
 
 
-
 def verify_pw(real_pw, hashed_pw):
     return pwd_context.verify(real_pw, hashed_pw)
 
@@ -63,11 +62,11 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=30)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm=getenv("ALGORITHM"))
+    encoded_jwt = jwt.encode(to_encode, getenv('SECRET_KEY'), algorithm=getenv('ALGORITHM'))
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
+def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -94,6 +93,9 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         raise HTTPException(status_code=400, detail="User not found")
     if not verify_pw(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Password wrong")
-    access_token_exp = timedelta(minutes=float(getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
+    access_token_exp = timedelta(minutes=30)
     access_token = create_access_token(data={"sub": user.user_name}, expires_delta=access_token_exp)
     return Token(access_token=access_token, token_type="bearer")
+
+
+#float(getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))

@@ -1,4 +1,3 @@
-import datetime
 import psycopg2
 from backend import security
 
@@ -12,7 +11,23 @@ def store_request(duration: int, theme: str, accommodation: str, budget: str, us
     cur.execute(f"""INSERT INTO vacation_request (duration, theme, accommodation_type, budget, user_id, requested)
                     VALUES({duration}, '{theme}', '{accommodation}', '{budget}', {user_id}, current_timestamp);""")
     conn.commit()
-    return "request stored"
+    cur.execute(f"""SELECT * FROM vacation_request 
+                        WHERE user_id = {user_id};""")
+    saved_request = cur.fetchone()
+    return saved_request[0]
+
+
+def store_response(response_opj, request_id):
+    cur.execute(f"""INSERT INTO vacation_result (destination, flights, accommodation, activities, tips, request_id)
+                    VALUES('{response_opj.destination}', '{response_opj.flights}', '{response_opj.accommodation_type}', '{response_opj.activities}', '{response_opj.food_rec}', {request_id});""")
+    conn.commit()
+    return "response stored"
+
+
+def delete_response(response_id: int):
+    cur.execute(f"""DELETE FROM vacation_result WHERE id = {response_id};""")
+    conn.commit()
+    return "response deleted"
 
 
 def update_request(id: int, duration: int, theme: str, accommodation: str, budget: str):
