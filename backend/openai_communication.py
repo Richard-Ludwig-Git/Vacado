@@ -11,7 +11,8 @@ client = AsyncOpenAI(api_key=getenv('OPENAI_API_KEY'), timeout=120)
 
 class HolidayKeyFacts(BaseModel):
     destination: str
-    flights: str
+    transportation_type: str
+    travel_time: str
     accommodation_type: str
     activities: str
     food_rec: str
@@ -20,11 +21,14 @@ class HolidayKeyFacts(BaseModel):
 async def send_gpt_request(request):
     """openai prompt and response"""
     response = await client.responses.parse(
-        model="gpt-4o-mini",
+        model="gpt-4.1",
         input=[
             {"role": "user", "content": f"""You are a smart travel planner assistant. Based on the following user preferences, generate a personalized vacation plan 
-                    including flights, accommodation, and daily activities. Keep the tone helpful and inspiring.
+                    including desired transportation, travel time, accommodation, and daily activities. Keep the tone helpful and inspiring.
                     Trip Duration: {request.duration} days
+                    Origin City: {request.origin_city}
+                    Maximum travel time from Origin: {request.max_travel_time}
+                    Desired transportation Type: {request.transportation_type}                    
                     Trip Theme: {request.theme}
                     Accommodation Type: {request.accommodation_type}
                     Budget Level: {request.budget}
@@ -34,11 +38,12 @@ async def send_gpt_request(request):
                 Type of accommodation with a brief description
                 Daily itinerary with 1–2 activities per day, fitting the theme and budget
                 Optional local food recommendations
-                Format the output in clear sections. Keep it concise, friendly, and tailored. Avoid apostrophe"""}],
+                Format the output in clear sections. Keep it concise, friendly, and tailored. 
+                Dont use any apostrophe"""}],
                 text_format=HolidayKeyFacts,
                 store=False)
     json_response = json.loads(response.output_text)
-    class_response = HolidayKeyFacts(destination=json_response["destination"], flights=json_response["flights"], accommodation_type=json_response["accommodation_type"], activities=json_response["activities"], food_rec=json_response["food_rec"])
+    class_response = HolidayKeyFacts(destination=json_response["destination"], transportation_type=json_response["transportation_type"], travel_time=json_response["travel_time"], accommodation_type=json_response["accommodation_type"], activities=json_response["activities"], food_rec=json_response["food_rec"])
     return class_response
 
 

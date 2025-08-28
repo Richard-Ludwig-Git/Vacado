@@ -52,7 +52,6 @@ class User(BaseModel):
     user_id: int
     user_name: str
     email: str
-    disabled: bool | None = None
 
 
 class UserInDB(User):
