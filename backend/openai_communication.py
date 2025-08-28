@@ -1,11 +1,8 @@
-import asyncio
-
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 from os import getenv
 from dotenv import load_dotenv
 import json
-from backend import backend_endpoints
 
 
 load_dotenv("../env/.env")
@@ -21,6 +18,7 @@ class HolidayKeyFacts(BaseModel):
 
 
 async def send_gpt_request(request):
+    """openai prompt and response"""
     response = await client.responses.parse(
         model="gpt-4o-mini",
         input=[
@@ -38,15 +36,11 @@ async def send_gpt_request(request):
                 Optional local food recommendations
                 Format the output in clear sections. Keep it concise, friendly, and tailored. Avoid apostrophe"""}],
                 text_format=HolidayKeyFacts,
-                store=False,
-    )
+                store=False)
     json_response = json.loads(response.output_text)
     class_response = HolidayKeyFacts(destination=json_response["destination"], flights=json_response["flights"], accommodation_type=json_response["accommodation_type"], activities=json_response["activities"], food_rec=json_response["food_rec"])
     return class_response
 
-
-
-"""testresponse = send_gpt_request(ReqquestClass(duration=2, accommodation_type="hotel", theme="city", budget="low"))"""
 
 
 

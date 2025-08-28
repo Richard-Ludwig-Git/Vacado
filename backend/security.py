@@ -20,20 +20,24 @@ load_dotenv("env/.env")
 
 
 def verify_pw(real_pw, hashed_pw):
+    """password entered pw against hashed pw - validation"""
     return pwd_context.verify(real_pw, hashed_pw)
 
 
 def get_pw_hash(real_pw):
+    """returns a bcrypt hashed pw"""
     return pwd_context.hash(real_pw)
 
 
 def authenticate(username: str, real_pw: str):
+    """returns user if pw correct and if exists in DB"""
     user = backend.data_handling.get_user(username)
     if not user:
         return False
     if not verify_pw(real_pw, user.hashed_password):
         return False
     return user
+
 
 class Token(BaseModel):
     access_token: str
@@ -56,6 +60,7 @@ class UserInDB(User):
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    """returns jason web token for auth"""
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -67,6 +72,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
+    """returns user if successfully auth"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -88,6 +94,7 @@ def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
 
 @security_router.post("/token")
 def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    """returns bearer token for auth"""
     user = authenticate(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="User not found")
@@ -98,4 +105,3 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     return Token(access_token=access_token, token_type="bearer")
 
 
-#float(getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
