@@ -24,14 +24,15 @@ async def send_gpt_request(request):
         model="gpt-4.1",
         input=[
             {"role": "user", "content": f"""You are a smart travel planner assistant. Based on the following user preferences, generate a personalized vacation plan 
-                    including desired transportation, travel time, accommodation, and daily activities. Keep the tone helpful and inspiring.
+                    including desired transportation, travel time, accommodation, and daily activities. beware of any special needs. Keep the tone helpful and inspiring.
                     Trip Duration: {request.duration} days
                     Origin City: {request.origin_city}
                     Maximum travel time from Origin: {request.max_travel_time}
                     Desired transportation Type: {request.transportation_type}                    
                     Trip Theme: {request.theme}
                     Accommodation Type: {request.accommodation_type}
-                    Budget Level: {request.budget}
+                    Budget: {request.budget}
+                    Special Need: {request.special_need}
                 Please include:
                 A suggested destination that match the theme
                 Flight overview (example or average, not real-time data)

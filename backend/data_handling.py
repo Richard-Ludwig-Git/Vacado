@@ -9,8 +9,11 @@ cur = conn.cursor()
 
 def store_request(request: object, user_id: int):
     """SQL communication to store a user vacation request with user_id for identification and returns request ID PKEY"""
-    cur.execute(f"""INSERT INTO vacation_request (duration, origin_city, transportation_type, max_travel_time, theme, accommodation_type, budget, user_id, requested)
-                    VALUES({request.duration}, '{request.origin_city}', '{request.transportation_type}', '{request.max_travel_time}', '{request.theme}', '{request.accommodation_type}', '{request.budget}', {user_id}, current_timestamp);""")
+    cur.execute(f"""INSERT INTO vacation_request (duration, origin_city, transportation_type, max_travel_time, theme, 
+                                                  accommodation_type, budget, special_need, user_id, requested)
+                    VALUES({request.duration}, '{request.origin_city}', '{request.transportation_type}', 
+                          '{request.max_travel_time}', '{request.theme}', '{request.accommodation_type}', 
+                          '{request.budget}', '{request.special_need}', {user_id}, current_timestamp);""")
     conn.commit()
     cur.execute(f"""SELECT id FROM vacation_request 
                         WHERE user_id = {user_id};""")
@@ -20,8 +23,11 @@ def store_request(request: object, user_id: int):
 
 def store_response(response: object, request_id: int, user_id):
     """SQL communication to store ai-vacation response together with request_id secKEY to DB"""
-    cur.execute(f"""INSERT INTO vacation_result (destination, transportation_type, travel_time, accommodation, activities, tips, request_id, user_id)
-                    VALUES('{response.destination}', '{response.transportation_type}', '{response.travel_time}', '{response.accommodation_type}', '{response.activities}', '{response.food_rec}', {request_id}, {user_id});""")
+    cur.execute(f"""INSERT INTO vacation_result (destination, transportation_type, travel_time, 
+                                                 accommodation, activities, tips, request_id, user_id)
+                    VALUES('{response.destination}', '{response.transportation_type}', '{response.travel_time}', 
+                           '{response.accommodation_type}', '{response.activities}', '{response.food_rec}', 
+                            {request_id}, {user_id});""")
     conn.commit()
     return "response stored"
 
@@ -33,7 +39,15 @@ def delete_response(response_id: int):
     return "response deleted"
 
 
-def update_request(request_id: int, duration: int, origin_city: str, transportation_type: str, max_travel_time: int, theme: str, accommodation: str, budget: str):
+def update_request(request_id: int,
+                   duration: int,
+                   origin_city: str,
+                   transportation_type: str,
+                   max_travel_time: int,
+                   theme: str,
+                   accommodation: str,
+                   budget: str,
+                   special_need: str):
     """SQL communication to update ai-vacation request parameter if changed"""
     cur.execute(f"""UPDATE vacation_request 
                     SET duration = CASE WHEN {duration} = 0 THEN duration ELSE {duration} END, 
@@ -42,7 +56,8 @@ def update_request(request_id: int, duration: int, origin_city: str, transportat
                         max_travel_time = CASE WHEN '{max_travel_time}' = '' THEN max_travel_time ELSE '{max_travel_time}' END,
                         theme = CASE WHEN '{theme}' = '' THEN theme ELSE '{theme}' END, 
                         accommodation_type = CASE WHEN '{accommodation}' = '' THEN accommodation_type ELSE '{accommodation}' END, 
-                        budget = CASE WHEN '{budget}' = '' THEN budget ELSE '{budget}' END 
+                        budget = CASE WHEN '{budget}' = '' THEN budget ELSE '{budget}' END,
+                        special_need = CASE WHEN '{special_need}' = '' THEN special_need ELSE '{special_need}' END  
                     WHERE id = {request_id};""")
     conn.commit()
     return "request updated"
