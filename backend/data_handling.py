@@ -2,8 +2,8 @@ import psycopg2
 from backend import security
 
 
-
-conn = psycopg2.connect(host="localhost", port=5432, dbname="vacado", user="vladtepesch")
+conn = psycopg2.connect("postgresql://vladtepesch:5VE1eVSSaY3HKP2ZpmNGEcohYGaK75mH@dpg-d2rbeoje5dus73d3fs30-a/vacado")
+#conn = psycopg2.connect(host="localhost", port=5432, dbname="vacado", user="vladtepesch")
 cur = conn.cursor()
 
 
