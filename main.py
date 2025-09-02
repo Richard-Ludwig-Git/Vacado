@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from backend import security, backend_endpoints
 from frontend import frontend_routes
 
-PORT = 8000
 
 vacado = FastAPI()
 vacado.include_router(router=security.security_router)

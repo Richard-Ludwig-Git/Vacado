@@ -2,8 +2,8 @@ import psycopg2
 from backend import security
 
 
-
-conn = psycopg2.connect(host="dpg-d2rbeoje5dus73d3fs30-a", port=5432, dbname="vacado", user="vladtepesch", password="5VE1eVSSaY3HKP2ZpmNGEcohYGaK75mH")
+conn = psycopg2.connect(host="localhost", port=5432, dbname="vacado", user="vladtepesch")
+#conn = psycopg2.connect(host="dpg-d2rbeoje5dus73d3fs30-a", port=5432, dbname="vacado", user="vladtepesch", password="5VE1eVSSaY3HKP2ZpmNGEcohYGaK75mH")
 cur = conn.cursor()
 
 
@@ -73,6 +73,7 @@ def get_requests_by_userid(user_id: int):
 def delete_request_by_id(request_id: int, user):
     """SQL communication to delete a request from the DB"""
     cur.execute(f"DELETE FROM vacation_request WHERE id = {request_id} and user_id = {user.user_id};")
+    cur.execute(f"DELETE FROM vacation_result WHERE request_id = {request_id} and user_id = {user.user_id};")
     conn.commit()
     return "request deleted"
 
