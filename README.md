@@ -1,4 +1,4 @@
-# 🌍 Vacado – Your Vacation, Planned in Seconds ✈️
+# Vacado – Your Vacation, Planned in Seconds 
 
 Vacado is a ai-powered travel planning web app prototype that helps users plan their dream vacation. 
 The app then generates a personalized trip plan – all within seconds.
@@ -24,6 +24,17 @@ This repository includes:
 -  User Login and Registration with Hashed password in PostgreSQL Database
 
 ---
+##  Tech Spec
+
+- Python
+- FastAPI
+- PostgreSQL
+- HTML
+- CSS
+- SwaggerUI
+- JWT Authentication
+- Render.com
+
 
 ##  File Structure
 
