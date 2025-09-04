@@ -1,6 +1,6 @@
-# 🌍 Vacado – Your Vacation, Planned in Seconds ✈️
+# Vacado – Your Vacation, Planned in Seconds 
 
-Vacado is a travel planning web app prototype that helps users plan their dream vacation by selecting duration, trip theme, accommodation type, and budget. 
+Vacado is a ai-powered travel planning web app prototype that helps users plan their dream vacation. 
 The app then generates a personalized trip plan – all within seconds.
 
 This repository includes:
@@ -20,10 +20,21 @@ This repository includes:
 -  **User Page** - Showing previous planed Trips and User Data (all changeable and stored in Database)
 -  **Trip Planner Form** – Collects user preferences (duration, theme, budget, accommodation)
 -  **Registration Page** – Simple user sign-up form (username + password + email)
--  **ChatGPT Prompt Generator** – Ready-to-use prompt template to feed into AI models
+-  **OpenAI Communication** – structured OpenAI prompt and response
 -  User Login and Registration with Hashed password in PostgreSQL Database
 
 ---
+##  Tech Spec
+
+- Python
+- FastAPI
+- PostgreSQL
+- HTML
+- CSS
+- SwaggerUI
+- JWT Authentication
+- Render.com
+
 
 ##  File Structure
 
@@ -42,6 +53,7 @@ vacado/
     ├── backend_endpoints.py  # CRUD endpoints for all DB-Tables
     ├── data_handling.py      # PostgreSQL communication
     ├── security.py           # JWT authentication, User management
+    ├── openai_communication.py # OpenAI structured prompt with JSON structured response 
 
 
 
