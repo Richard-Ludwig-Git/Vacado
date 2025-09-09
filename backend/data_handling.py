@@ -2,8 +2,8 @@ import psycopg2
 from backend import security
 
 
-#conn = psycopg2.connect(host="localhost", port=5432, dbname="vacado", user="vladtepesch")
-conn = psycopg2.connect(host="dpg-d2rbeoje5dus73d3fs30-a", port=5432, dbname="vacado", user="vladtepesch", password="5VE1eVSSaY3HKP2ZpmNGEcohYGaK75mH")
+conn = psycopg2.connect(host="localhost", port=5432, dbname="vacado", user="vladtepesch")
+#conn = psycopg2.connect(host="dpg-d2rbeoje5dus73d3fs30-a", port=5432, dbname="vacado", user="vladtepesch", password="5VE1eVSSaY3HKP2ZpmNGEcohYGaK75mH")
 cur = conn.cursor()
 
 
@@ -32,6 +32,12 @@ def store_response(response: object, request_id: int, user_id):
     return "response stored"
 
 
+def get_response_id_by_request_id(request_id: int):
+    """SQL communication to return response by id or request_id"""
+    cur.execute(f"SELECT * FROM vacation_result WHERE request_id = {request_id};")
+    return cur.fetchall()
+
+
 def delete_response(response_id: int):
     """SQL communication to delete ai-vacation response from DB"""
     cur.execute(f"DELETE FROM vacation_result WHERE id = {response_id};")
@@ -57,14 +63,19 @@ def update_request(request_id: int,
                         theme = CASE WHEN '{theme}' = '' THEN theme ELSE '{theme}' END, 
                         accommodation_type = CASE WHEN '{accommodation}' = '' THEN accommodation_type ELSE '{accommodation}' END, 
                         budget = CASE WHEN '{budget}' = '' THEN budget ELSE '{budget}' END,
-                        special_need = CASE WHEN '{special_need}' = '' THEN special_need ELSE '{special_need}' END  
+                        special_need = CASE WHEN '{special_need}' = '' THEN special_need ELSE '{special_need}' END,  
+                        requested = current_timestamp
                     WHERE id = {request_id};""")
     conn.commit()
-    return "request updated"
+    cur.execute(f"""SELECT * FROM vacation_request 
+                        WHERE id = {request_id};""")
+    new_request = cur.fetchone()
+    delete_response(get_response_id_by_request_id(request_id)[0][0])
+    return new_request
 
 
 def get_requests_by_userid(user_id: int):
-    """SQL communication to show all requests, made by the current user to display in possible fortend page"""
+    """SQL communication to show all requests, made by the current user to display in possible frontend page"""
     cur.execute(f"""SELECT * FROM vacation_request 
                     WHERE user_id = {user_id};""")
     return cur.fetchall()
