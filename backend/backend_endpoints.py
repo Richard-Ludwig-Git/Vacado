@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import asyncio
 
 
-backapp = APIRouter()
+backapp = APIRouter(tags=["backend"])
 
 
 class RequestClass(BaseModel):

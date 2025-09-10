@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from backend import data_handling, security
 
 
-routing = APIRouter()
+routing = APIRouter(tags=["frontend"])
 page = Jinja2Templates(directory="frontend")
 
 

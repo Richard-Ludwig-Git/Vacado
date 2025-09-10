@@ -12,7 +12,7 @@ from jwt.exceptions import InvalidTokenError
 import backend.data_handling
 
 
-security_router = APIRouter()
+security_router = APIRouter(tags=["security"])
 page = Jinja2Templates(directory="frontend")
 outh2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
