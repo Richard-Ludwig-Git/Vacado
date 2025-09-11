@@ -25,7 +25,7 @@ def create_new_user(username: str = Form(default=""), password: str = Form(defau
     """unsecured endpoint to create a new user"""
     hashed_pw = security.get_pw_hash(password)
     data_handling.create_user(username, hashed_pw, email)
-    return RedirectResponse(url="/frontend/login")
+    return f"User {username} created"
 
 
 @backapp.post("/user_page/make_request")
