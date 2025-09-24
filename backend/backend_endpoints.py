@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Form
+from fastapi import APIRouter, Form, HTTPException
+from starlette.responses import JSONResponse
 from backend import data_handling, security, openai_communication
 from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
@@ -20,9 +21,11 @@ class RequestClass(BaseModel):
     special_need: str
 
 
-@backapp.post("/onboarding")
-def create_new_user(username: str = Form(default=""), password: str = Form(default=""), email: str = Form(default="")):
+@backapp.post("/onboarding", status_code=201)
+def create_new_user(username: str = Form(), password: str = Form(), email: str = Form()):
     """unsecured endpoint to create a new user"""
+    if username == "" or password == "" or email == "":
+        return JSONResponse(status_code=400, content={"detail":"Required filed not given"})
     hashed_pw = security.get_pw_hash(password)
     data_handling.create_user(username, hashed_pw, email)
     return f"User {username} created"

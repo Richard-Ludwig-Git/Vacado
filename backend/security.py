@@ -9,14 +9,14 @@ from os import getenv
 from dotenv import load_dotenv
 import jwt
 from jwt.exceptions import InvalidTokenError
-import backend.data_handling
+from backend import data_handling
 
 
 security_router = APIRouter(tags=["security"])
 page = Jinja2Templates(directory="frontend")
 outh2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-load_dotenv("env/.env")
+load_dotenv("../env/.env")
 
 
 def verify_pw(real_pw, hashed_pw):
@@ -31,7 +31,7 @@ def get_pw_hash(real_pw):
 
 def authenticate(username: str, real_pw: str):
     """returns user if pw correct and if exists in DB"""
-    user = backend.data_handling.get_user(username)
+    user = data_handling.get_user(username)
     if not user:
         return False
     if not verify_pw(real_pw, user.hashed_password):
@@ -73,7 +73,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
     """returns user if successfully auth"""
     credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
+        status_code=HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
@@ -85,7 +85,7 @@ def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = backend.data_handling.get_user(username=token_data.username)
+    user = data_handling.get_user(username=token_data.username)
     if not user:
         raise credentials_exception
     return user
@@ -102,5 +102,4 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     access_token_exp = timedelta(minutes=30)
     access_token = create_access_token(data={"sub": user.user_name}, expires_delta=access_token_exp)
     return Token(access_token=access_token, token_type="bearer")
-
 

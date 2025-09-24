@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import json
 
 
-load_dotenv("../env/.env")
+load_dotenv("env/.env")
 client = AsyncOpenAI(api_key=getenv('OPENAI_API_KEY'), timeout=120)
 
 
