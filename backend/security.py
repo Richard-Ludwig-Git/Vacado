@@ -73,7 +73,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 def get_current_user(token: Annotated[str, Depends(outh2_scheme)]):
     """returns user if successfully auth"""
     credentials_exception = HTTPException(
-        status_code=HTTP_401_UNAUTHORIZED,
+        status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
@@ -96,9 +96,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     """returns bearer token for auth"""
     user = authenticate(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=400, detail="User not found")
-    if not verify_pw(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Password wrong")
+        raise HTTPException(status_code=401, detail="User not found")
     access_token_exp = timedelta(minutes=30)
     access_token = create_access_token(data={"sub": user.user_name}, expires_delta=access_token_exp)
     return Token(access_token=access_token, token_type="bearer")

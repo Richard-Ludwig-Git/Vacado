@@ -19,8 +19,8 @@ def store_request(request: object, user_id: int):
     conn.commit()
     cur.execute(f"""SELECT id FROM vacation_request 
                         WHERE user_id = {user_id};""")
-    saved_request = cur.fetchone()
-    return saved_request[0]
+    saved_request = cur.fetchall()
+    return saved_request[-1][0]
 
 
 def store_response(response: object, request_id: int, user_id):
@@ -96,10 +96,14 @@ def get_user(username: str):
     cur.execute(f"""SELECT * FROM user_db
                     WHERE user_name ='{username}';""")
     userdata = cur.fetchone()
-    user = security.UserInDB(user_id=userdata[0], user_name=userdata[1], hashed_password=userdata[2], email=userdata[3])
-    if not user:
-        return None
-    return user
+    try:
+        user = security.UserInDB(user_id=userdata[0], user_name=userdata[1], hashed_password=userdata[2], email=userdata[3])
+        if not user:
+            return None
+        return user
+    except TypeError:
+        return False
+
 
 
 def create_user(username: str, hashed_pw: str, email: str):

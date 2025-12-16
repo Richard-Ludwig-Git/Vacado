@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Form, HTTPException
+from fastapi import APIRouter, Form
 from starlette.responses import JSONResponse
 from backend import data_handling, security, openai_communication
-from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
 from pydantic import BaseModel
 import asyncio
@@ -20,7 +19,7 @@ class RequestClass(BaseModel):
     budget: str
     special_need: str
 
-
+"TEST"
 @backapp.post("/onboarding", status_code=201)
 def create_new_user(username: str = Form(), password: str = Form(), email: str = Form()):
     """unsecured endpoint to create a new user"""
@@ -48,13 +47,13 @@ def create_new_request(duration: int = Form(default="Days"),
     data_handling.store_response(openai_response, request_id, current_user.user_id)
     return openai_response
 
+"TEST"
 @backapp.get("/user_page/show_vacations")
 def get_vacations(current_user: security.User = Depends(security.get_current_user)):
     vacations = {}
     user_requests_data = data_handling.get_requests_by_userid(current_user.user_id)
     for request in user_requests_data:
         response = data_handling.get_response_id_by_request_id(request[0])
-        print(response)
         vacations[f"Request {request[0]}"] = {
                                 f"Request" : {
                                     "Duration" : f"{request[1]} Days",
@@ -75,7 +74,7 @@ def get_vacations(current_user: security.User = Depends(security.get_current_use
     return vacations
 
 
-@backapp.delete("/user_page/delete_response")
+@backapp.delete("/user_page/delete_response/")
 def delete_response(response_id: int = Form(default="RESPONSE_ID"), current_user: security.User = Depends(security.get_current_user)):
     """secured endpoint inside user area to delete a response from the DB"""
     data_handling.delete_response(response_id, current_user.user_id)
